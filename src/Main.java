@@ -11,7 +11,7 @@ public class Main {
         BirdRepository birdRepository = BirdRepository.getInstance();
         Game game = new Game(birdRepository.noBirds(),10,4,1);
         GuiProcessor gui = new GuiProcessor(300,300);
-        Application.launch(gui.getClass(),args);
+        Application.launch(GuiProcessor.class,args);
 
     }
 
