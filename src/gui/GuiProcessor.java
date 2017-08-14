@@ -10,14 +10,6 @@ import javafx.stage.Stage;
 
 public class GuiProcessor extends Application {
 
-    private int width;
-    private int height;
-
-    public GuiProcessor(int width,int height){
-        this.width = width;
-        this.height = height;
-    }
-
     @Override
     public void start(Stage stage) throws Exception {
         Image i = ImageRepository.getInstance().loadImage("alpenstrandlaeufer_01.JPG");
