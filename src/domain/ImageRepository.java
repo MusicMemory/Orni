@@ -13,7 +13,7 @@ public class ImageRepository {
     }
 
     public Image loadImage(String filename) throws Exception {
-        Image i = new Image(new FileInputStream(folder + filename));
+        Image i = new Image(new FileInputStream(folder + filename),600,400,false,false);
         return i;
     }
 

@@ -23,6 +23,27 @@ public class Game {
         init(this.noBirds,this.noQuestions,this.noAnswers,this.difficuty);
     }
 
+    public int getQuestion(int q){
+        return questions.get(q);
+    }
+
+    public List<Integer> getAnswers(int q){
+        return answers.get(q);
+    }
+
+    public boolean isCorrect(int q,int a){
+        if (questions.get(q) == answers.get(q).get(a)) return true;
+        else return false;
+    }
+
+    public void addPoints(int p){
+        points += p;
+    }
+
+    public int getPoints(){
+        return points;
+    }
+
     private void init(int noBirds, int noQuestions, int noAnswers, int difficulty) {
 
         BirdRepository birdRepository = BirdRepository.getInstance();
