@@ -15,9 +15,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.*;
 import javafx.scene.image.Image;
 
-import java.lang.reflect.Array;
+import java.io.FileInputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 
@@ -27,6 +26,7 @@ public class Main extends Application {
     private static final int noAnswers = 4;
     private static final int difficulty = 1;
     private Game game = new Game(BirdRepository.getInstance().noBirds(),noQuestions,noAnswers,difficulty);
+    private int currentQuestion = 0;
 
     private AnswerPane answerPane = new AnswerPane(noAnswers);
 
@@ -41,12 +41,14 @@ public class Main extends Application {
                 Button button = new Button();
                 button.setPrefWidth(120);
                 button.setOnAction(e -> {
-                    if (button.getText().equals("test1")){
+                    if (button.getText().equals(BirdRepository.getInstance().getBirdByID(game.getQuestion(currentQuestion)).getName())){
                         System.out.println("correct");
+                        currentQuestion+=1;
                         nextQuestion();
                     }
                     else {
                         System.out.println("incorrect");
+                        currentQuestion+=1;
                         nextQuestion();
                     }
                 });
@@ -55,32 +57,44 @@ public class Main extends Application {
             }
             getChildren().add(hBox);
         }
-        public void setAnswers(String... answers){
-            Collections.shuffle(buttons);
-            for (int i = 0; i < noAnswers; i++){
-                buttons.get(i).setText(answers[i]);
+        public void setAnswers(List<String> answers){
+            for (int a = 0; a < answers.size(); a++){
+                buttons.get(a).setText(answers.get(a));
             }
         }
     }
 
-    private Parent createContent(){
+    private Parent createContent(List<Integer> answerIds) throws Exception {
         BorderPane root = new BorderPane();
         root.setPrefSize(600,500);
-        answerPane.setAnswers("test1","test2","test3","test4");
+
+        ImageView iv = new ImageView(ImageRepository.getInstance().loadImage(BirdRepository.getInstance().getBirdByID(currentQuestion).getFilename()));
+
+        List<String> answers = new ArrayList<>();
+        for (int a = 0; a < answerIds.size(); a++){
+            answers.add(BirdRepository.getInstance().getBirdByID(answerIds.get(a)).getName());
+        }
+        answerPane.setAnswers(answers);
+
         root.setBottom(answerPane);
+        root.setCenter(iv);
+
         return root;
     }
 
     private void nextQuestion(){
-        answerPane.setAnswers("d","c","b","a");
+        List<Integer> answerIds = game.getAnswers(currentQuestion);
+        List<String> answers = new ArrayList<>();
+        for (int a = 0; a < answerIds.size(); a++){
+            answers.add(BirdRepository.getInstance().getBirdByID(answerIds.get(a)).getName());
+        }
+        answerPane.setAnswers(answers);
     }
 
     @Override
     public void start(Stage stage) throws Exception {
-
-
-        List<Integer> answers = game.getAnswers(question);
-        stage.setScene(new Scene(createContent()));
+        List<Integer> answerIds = game.getAnswers(currentQuestion);
+        stage.setScene(new Scene(createContent(answerIds)));
         stage.show();
     }
 
