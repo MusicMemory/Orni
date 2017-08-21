@@ -2,6 +2,8 @@ package domain;
 
 import javafx.scene.image.Image;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+
 
 public class ImageRepository {
 
@@ -12,9 +14,13 @@ public class ImageRepository {
         this.folder = folder;
     }
 
-    public Image loadImage(String filename) throws Exception {
-        Image i = new Image(new FileInputStream(folder + filename),600,400,false,false);
-        return i;
+    public Image loadImage(String filename)  {
+        try {
+            return new Image(new FileInputStream(folder + filename),600,400,false,false);
+        }
+        catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static ImageRepository getInstance(){
