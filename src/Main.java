@@ -68,7 +68,7 @@ public class Main extends Application {
         BorderPane root = new BorderPane();
         root.setPrefSize(600,500);
 
-        ImageView iv = new ImageView(ImageRepository.getInstance().loadImage(BirdRepository.getInstance().getBirdByID(currentQuestion).getFilename()));
+        ImageView iv = new ImageView(ImageRepository.getInstance().loadImage(BirdRepository.getInstance().getBirdByID(game.getQuestion(currentQuestion)).getFilename()));
 
         List<String> answers = new ArrayList<>();
         for (int a = 0; a < answerIds.size(); a++){
