@@ -11,8 +11,8 @@ public class Game {
     private int noQuestions;
     private int noAnswers;
     private int difficuty;
-    private List<Integer> questions = new ArrayList<Integer>();
-    private List<List<Integer>> answers = new ArrayList<List<Integer>>();
+    private List<Integer> questions = new ArrayList<>();
+    private List<List<Integer>> answers = new ArrayList<>();
 
     public Game(int noBirds, int noQuestions, int noAnswers, int difficulty){
         this.points = 0;
