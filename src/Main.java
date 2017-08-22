@@ -5,6 +5,7 @@ import domain.ImageRepository;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -12,10 +13,12 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import org.omg.PortableServer.POA;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,10 +31,14 @@ public class Main extends Application {
     private static final int DIFFICULTY = 1;
 
     private final Game game = new Game(BirdRepository.getInstance().noBirds(), NO_QUESTIONS, NO_ANSWERS, DIFFICULTY);
-    private int currentQuestion = 0;
     private final RootPane rootPane = new RootPane();
-    private Scene scene;
+    private final Scene scene = new Scene(rootPane);
 
+    private int currentQuestion = 0;
+
+    /*-----------------------------------------------------------------------*\
+     * RootPane                                                              *
+    \*-----------------------------------------------------------------------*/
 
     public class RootPane extends BorderPane {
 
@@ -39,7 +46,6 @@ public class Main extends Application {
 
         public RootPane() {
             setPrefSize(600, 500);
-            BorderPane.setAlignment(answerPane, Pos.BOTTOM_CENTER);
             setAnswers();
             setImage();
         }
@@ -63,6 +69,9 @@ public class Main extends Application {
         }
     }
 
+    /*-----------------------------------------------------------------------*\
+     * AnswerPane                                                            *
+    \*-----------------------------------------------------------------------*/
 
     private class AnswerPane extends VBox {
 
@@ -70,8 +79,8 @@ public class Main extends Application {
 
         public AnswerPane(int noAnswers){
             super(20);
-            setAlignment(Pos.CENTER);
             HBox hBox = new HBox();
+            hBox.setAlignment(Pos.CENTER);
             for (int i = 0; i < noAnswers; i++){
                 Button button = new Button();
                 button.setPrefWidth(120);
@@ -105,12 +114,9 @@ public class Main extends Application {
 
     }
 
-
-
     @Override
     public void start(Stage stage) throws Exception {
         List<Integer> answerIds = game.getAnswers(currentQuestion);
-        scene = new Scene(rootPane);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
         stage.setScene(scene);
         stage.show();
@@ -127,10 +133,12 @@ public class Main extends Application {
         }
     }
 
+    /*-----------------------------------------------------------------------*\
+     * main                                                                  *
+    \*-----------------------------------------------------------------------*/
 
     public static void main(String[] args) throws Exception{
         launch(args);
     }
-
 
 }
