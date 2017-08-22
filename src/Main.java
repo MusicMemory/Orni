@@ -3,10 +3,15 @@ import domain.BirdRepository;
 import domain.Game;
 import domain.ImageRepository;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,6 +30,7 @@ public class Main extends Application {
     private final Game game = new Game(BirdRepository.getInstance().noBirds(), NO_QUESTIONS, NO_ANSWERS, DIFFICULTY);
     private int currentQuestion = 0;
     private final RootPane rootPane = new RootPane();
+    private Scene scene;
 
 
     public class RootPane extends BorderPane {
@@ -33,6 +39,7 @@ public class Main extends Application {
 
         public RootPane() {
             setPrefSize(600, 500);
+            BorderPane.setAlignment(answerPane, Pos.BOTTOM_CENTER);
             setAnswers();
             setImage();
         }
@@ -63,6 +70,7 @@ public class Main extends Application {
 
         public AnswerPane(int noAnswers){
             super(20);
+            setAlignment(Pos.CENTER);
             HBox hBox = new HBox();
             for (int i = 0; i < noAnswers; i++){
                 Button button = new Button();
@@ -102,12 +110,27 @@ public class Main extends Application {
     @Override
     public void start(Stage stage) throws Exception {
         List<Integer> answerIds = game.getAnswers(currentQuestion);
-        stage.setScene(new Scene(rootPane));
+        scene = new Scene(rootPane);
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
+        stage.setScene(scene);
         stage.show();
     }
+
+    private class KeyEventHandler implements EventHandler<KeyEvent> {
+        @Override
+        public void handle(KeyEvent event) {
+            final KeyCode code = event.getCode();
+            if (code == KeyCode.ESCAPE) {
+                Platform.exit();
+                return;
+            }
+        }
+    }
+
 
     public static void main(String[] args) throws Exception{
         launch(args);
     }
+
 
 }
