@@ -1,0 +1,20 @@
+.root-pane {
+    -fx-background-color: Black;
+    -fx-padding : 15;
+}
+
+Button {
+    -fx-font: 14px "Sans Serif";
+    -fx-background-color: #065DA0;
+    -fx-text-fill: white;
+    -fx-pref-width: 200px;
+}
+
+Button:hover {
+    -fx-background-color: white;
+    -fx-text-fill: #065DA0;
+}
+
+HBox {
+    -fx-alignment: center;
+}
