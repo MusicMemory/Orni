@@ -32,7 +32,7 @@ public class Game {
     }
 
     public boolean isCorrect(int q,int a){
-        if (questions.get(q) == answers.get(q).get(a)) return true;
+        if (questions.get(q).equals(answers.get(q).get(a))) return true;
         else return false;
     }
 
@@ -70,12 +70,12 @@ public class Game {
             while (answerList.size() < noAnswers){
                 birdCandidateId = r.nextInt(noBirds);
                 birdCandidate = birdRepository.getBirdByID(birdCandidateId);
-                if (birdCandidate.getName() == birdQuestion.getName()){
+                if (birdCandidate.getName().equals(birdQuestion.getName())) {
                     continue;
                 }
                 boolean isDifferent = true;
                 for(int a = 0; a < answerList.size(); a++){
-                    if (birdCandidate.getName() == birdRepository.getBirdByID(answerList.get(a)).getName()){
+                    if (birdCandidate.getName().equals(birdRepository.getBirdByID(answerList.get(a)).getName())) {
                         isDifferent = false;
                         continue;
                     }
