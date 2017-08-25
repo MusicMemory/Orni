@@ -43,6 +43,7 @@ public class Main extends Application {
 
         public RootPane() {
             setPrefSize(600, 500);
+
             setAnswers();
             setImage();
         }
@@ -82,8 +83,16 @@ public class Main extends Application {
                 Button button = new Button();
                 button.setPrefWidth(120);
                 button.setOnAction(e -> {
-                    System.out.println(isAnswerCorrect(button)? "correct" : "incorrect");
-                    nextQuestion();
+                    if (currentQuestion < NO_QUESTIONS-1) {
+                        if (isAnswerCorrect(button)) {
+                            game.addPoints(5);
+                        }
+                        System.out.println(game.getPoints());
+                        nextQuestion();
+                    }
+                    else {
+                        System.out.println("Du hast " + game.getPoints() + " Punkte erreicht.");
+                    }
                 });
                 buttons.add(button);
                 hBox.getChildren().add(button);
@@ -113,7 +122,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        List<Integer> answerIds = game.getAnswers(currentQuestion);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
         stage.setScene(scene);
         stage.show();
@@ -125,6 +133,10 @@ public class Main extends Application {
             final KeyCode code = event.getCode();
             if (code == KeyCode.ESCAPE) {
                 Platform.exit();
+                return; //Was bewirkt das return?
+            }
+            else if (code == KeyCode.DIGIT1) {
+                System.out.println("1");
                 return;
             }
         }
