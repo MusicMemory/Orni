@@ -43,6 +43,8 @@ public class Main extends Application {
 
         public RootPane() {
             setPrefSize(600, 500);
+            getStyleClass().add("root-pane");
+
             setAnswers();
             setImage();
         }
@@ -75,15 +77,24 @@ public class Main extends Application {
         private List<Button> buttons = new ArrayList<>();
 
         public AnswerPane(int noAnswers){
-            super(20);
+            super();
+
             HBox hBox = new HBox();
-            hBox.setAlignment(Pos.CENTER);
+
             for (int i = 0; i < noAnswers; i++){
                 Button button = new Button();
-                button.setPrefWidth(120);
+                //button.setPrefWidth(120);
                 button.setOnAction(e -> {
-                    System.out.println(isAnswerCorrect(button)? "correct" : "incorrect");
-                    nextQuestion();
+                    if (currentQuestion < NO_QUESTIONS-1) {
+                        if (isAnswerCorrect(button)) {
+                            game.addPoints(5);
+                        }
+                        System.out.println(game.getPoints());
+                        nextQuestion();
+                    }
+                    else {
+                        System.out.println("Du hast " + game.getPoints() + " Punkte erreicht.");
+                    }
                 });
                 buttons.add(button);
                 hBox.getChildren().add(button);
@@ -108,15 +119,26 @@ public class Main extends Application {
             rootPane.setAnswers();
             rootPane.setImage();
         }
-
     }
+
+    /*-----------------------------------------------------------------------*\
+     * main                                                                  *
+    \*-----------------------------------------------------------------------*/
 
     @Override
     public void start(Stage stage) throws Exception {
-        List<Integer> answerIds = game.getAnswers(currentQuestion);
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
+
+        scene.getStylesheets().add("/css/game.css");
+
         stage.setScene(scene);
         stage.show();
+    }
+
+    private void pressButton(int i) {
+        if (i < NO_ANSWERS){
+            rootPane.answerPane.buttons.get(i).fire();
+        }
     }
 
     private class KeyEventHandler implements EventHandler<KeyEvent> {
@@ -127,12 +149,44 @@ public class Main extends Application {
                 Platform.exit();
                 return;
             }
+            else if (code == KeyCode.DIGIT1) {
+                pressButton(0);
+                return;
+            }
+            else if (code == KeyCode.DIGIT2) {
+                pressButton(1);
+                return;
+            }
+            else if (code == KeyCode.DIGIT3) {
+                pressButton(2);
+                return;
+            }
+            else if (code == KeyCode.DIGIT4) {
+                pressButton(3);
+                return;
+            }
+            else if (code == KeyCode.DIGIT5) {
+                pressButton(4);
+                return;
+            }
+            else if (code == KeyCode.DIGIT6) {
+                pressButton(5);
+                return;
+            }
+            else if (code == KeyCode.DIGIT7) {
+                pressButton(6);
+                return;
+            }
+            else if (code == KeyCode.DIGIT8) {
+                pressButton(7);
+                return;
+            }
+            else if (code == KeyCode.DIGIT9) {
+                pressButton(8);
+                return;
+            }
         }
     }
-
-    /*-----------------------------------------------------------------------*\
-     * main                                                                  *
-    \*-----------------------------------------------------------------------*/
 
     public static void main(String[] args) throws Exception{
         launch(args);

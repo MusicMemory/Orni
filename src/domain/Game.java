@@ -32,7 +32,7 @@ public class Game {
     }
 
     public boolean isCorrect(int q,int a){
-        if (questions.get(q).equals(answers.get(q).get(a))) return true;
+        if (questions.get(q) == answers.get(q).get(a)) return true;
         else return false;
     }
 
@@ -52,7 +52,7 @@ public class Game {
         Bird birdCandidate;
 
         Random r = new Random();
-
+        //LOOP
         for (int q = 0; q < noQuestions; q++){
             //QUESTIONS
             while (true) {
@@ -64,28 +64,27 @@ public class Game {
                 }
             }
             //ANSWERS
-            Bird birdQuestion = birdRepository.getBirdByID(questions.get(q));
+
             List<Integer> answerList = new ArrayList<Integer>();
+            Bird birdQuestion = birdRepository.getBirdByID(questions.get(q));
 
             while (answerList.size() < noAnswers){
                 birdCandidateId = r.nextInt(noBirds);
                 birdCandidate = birdRepository.getBirdByID(birdCandidateId);
-                if (birdCandidate.getName().equals(birdQuestion.getName())) {
+                if (birdCandidate.getName() == birdQuestion.getName()) {
                     continue;
                 }
-                boolean isDifferent = true;
-                for(int a = 0; a < answerList.size(); a++){
-                    if (birdCandidate.getName().equals(birdRepository.getBirdByID(answerList.get(a)).getName())) {
-                        isDifferent = false;
+                for(int a = 0; a < answerList.size(); a++) {
+                    if (birdCandidate.getName() == birdRepository.getBirdByID(answerList.get(a)).getName()){
                         continue;
                     }
                 }
-                if (isDifferent){
-                    answerList.add(birdCandidateId);
-                }
+                answerList.add(birdCandidateId);
             }
+            //RIGHT ANSWER
             int posRightAnswer = r.nextInt(noAnswers);
             answerList.set(posRightAnswer,questions.get(q));
+            //ADD
             answers.add(answerList);
         }
         System.out.println(questions);
