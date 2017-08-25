@@ -68,15 +68,17 @@ public class Game {
             List<Integer> answerList = new ArrayList<Integer>();
             Bird birdQuestion = birdRepository.getBirdByID(questions.get(q));
 
+            outerloop:
             while (answerList.size() < noAnswers){
                 birdCandidateId = r.nextInt(noBirds);
                 birdCandidate = birdRepository.getBirdByID(birdCandidateId);
                 if (birdCandidate.getName().equals(birdQuestion.getName())) {
-                    continue;
+                    continue outerloop;
                 }
                 for(int a = 0; a < answerList.size(); a++) {
-                    if (birdCandidate.getName().equals(birdRepository.getBirdByID(answerList.get(a)).getName())) {
-                        continue;
+                    final String birdNameAnswer = birdRepository.getBirdByID(answerList.get(a)).getName();
+                    if (birdCandidate.getName().equals(birdNameAnswer)) {
+                        continue outerloop;
                     }
                 }
                 answerList.add(birdCandidateId);
