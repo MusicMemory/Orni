@@ -17,4 +17,5 @@ Button:hover {
 
 HBox {
     -fx-alignment: center;
+    -fx-spacing: 10;
 }

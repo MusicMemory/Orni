@@ -79,7 +79,7 @@ public class Main extends Application {
         public AnswerPane(int noAnswers){
             super();
 
-            HBox hBox = new HBox(10);
+            HBox hBox = new HBox();
 
             for (int i = 0; i < noAnswers; i++){
                 Button button = new Button();
