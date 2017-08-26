@@ -12,10 +12,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
@@ -54,7 +51,7 @@ public class Main extends Application {
 
             setBottom();
             setImage();
-            setText(playerData.getPoints() + " Punkte.");
+            setText("Punkte: " + playerData.getPoints());
         }
 
         private void setImage() {
@@ -62,24 +59,24 @@ public class Main extends Application {
             final Bird bird = BirdRepository.getInstance().getBirdByID(birdId);
             final Image image = ImageRepository.getInstance().loadImage(bird.getFilename());
             imageView.setImage(image);
-            this.setCenter(imageView);
+
+            StackPane stackPane = new StackPane();
+            stackPane.getChildren().addAll(imageView,messageLabel);
+            this.setCenter(stackPane);
         }
 
         private void setBottom() {
-            VBox vBox = new VBox();
-            vBox.setAlignment(Pos.CENTER);
             setAnswers();
-            vBox.getChildren().addAll(messageLabel,answerPane);
-            this.setBottom(vBox);
+            this.setBottom(answerPane);
         }
 
         private void setMessageLabel(Boolean correct) {
             if (correct) {
-                messageLabel.setText("Richtig");
+                messageLabel.setText("+100");
                 messageLabel.setTextFill(Color.GREEN);
             }
             else {
-                messageLabel.setText("Total versagt!");
+                messageLabel.setText("+0");
                 messageLabel.setTextFill(Color.RED);
             }
             Task<Void> sleeper = new Task<Void>() {
@@ -89,7 +86,11 @@ public class Main extends Application {
                     return null;
                 }
             };
-            sleeper.setOnSucceeded(e -> messageLabel.setText(""));
+            sleeper.setOnSucceeded(e -> {
+                messageLabel.setText("");
+                setBottom();
+                setImage();
+            });
             new Thread(sleeper).start();
         }
 
@@ -104,7 +105,9 @@ public class Main extends Application {
 
         private void setText(String text){
             headerLabel.setText(text);
-            this.setTop(headerLabel);
+            HBox hb = new HBox(headerLabel);
+            hb.setAlignment(Pos.CENTER_RIGHT);
+            this.setTop(hb);
         }
     }
 
@@ -128,7 +131,7 @@ public class Main extends Application {
                     if (currentQuestion < NO_QUESTIONS - 1) {
                         if (isAnswerCorrect(button)) {
                             rootPane.setMessageLabel(true);
-                            playerData.addPoints(5);
+                            playerData.addPoints(100);
                         }
                         else rootPane.setMessageLabel(false);
                         nextQuestion();
@@ -136,7 +139,7 @@ public class Main extends Application {
                     else if (currentQuestion < NO_QUESTIONS) {
                         if (isAnswerCorrect(button)) {
                             rootPane.setMessageLabel(true);
-                            playerData.addPoints(5);
+                            playerData.addPoints(100);
                         }
                         else rootPane.setMessageLabel(false);
                         currentQuestion++;
@@ -163,9 +166,9 @@ public class Main extends Application {
 
         public void nextQuestion() {
             currentQuestion += 1;
-            rootPane.setBottom();
-            rootPane.setImage();
-            rootPane.setText(playerData.getPoints() + " Punkte.");
+            /*rootPane.setBottom();
+            rootPane.setImage();*/
+            rootPane.setText("" + playerData.getPoints());
         }
     }
 
