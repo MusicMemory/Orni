@@ -1,7 +1,7 @@
 package domain;
 
 public class PlayerData {
-    private int difficulty = 3;
+    private int difficulty = 1;
     private int points = 0;
 
     public void addPoints(int points) {

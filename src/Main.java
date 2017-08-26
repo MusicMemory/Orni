@@ -1,7 +1,9 @@
 import domain.*;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -11,8 +13,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -38,13 +42,17 @@ public class Main extends Application {
 
     public class RootPane extends BorderPane {
 
-        private AnswerPane answerPane = new AnswerPane(NO_ANSWERS);
+        private AnswerPane answerPane = new AnswerPane(NO_ANSWERS); //bottom
+        private ImageView imageView = new ImageView(); //center
+        private Label headerLabel = new Label();
+        private Label messageLabel = new Label();
 
         public RootPane() {
-            setPrefSize(600, 500);
             getStyleClass().add("root-pane");
+            headerLabel.getStyleClass().add("header-label");
+            messageLabel.getStyleClass().add("message-label");
 
-            setAnswers();
+            setBottom();
             setImage();
             setText(playerData.getPoints() + " Punkte.");
         }
@@ -53,8 +61,36 @@ public class Main extends Application {
             final int birdId = game.getQuestion(currentQuestion);
             final Bird bird = BirdRepository.getInstance().getBirdByID(birdId);
             final Image image = ImageRepository.getInstance().loadImage(bird.getFilename());
-            ImageView iv = new ImageView(image);
-            this.setCenter(iv);
+            imageView.setImage(image);
+            this.setCenter(imageView);
+        }
+
+        private void setBottom() {
+            VBox vBox = new VBox();
+            vBox.setAlignment(Pos.CENTER);
+            setAnswers();
+            vBox.getChildren().addAll(messageLabel,answerPane);
+            this.setBottom(vBox);
+        }
+
+        private void setMessageLabel(Boolean correct) {
+            if (correct) {
+                messageLabel.setText("Richtig");
+                messageLabel.setTextFill(Color.GREEN);
+            }
+            else {
+                messageLabel.setText("Total versagt!");
+                messageLabel.setTextFill(Color.RED);
+            }
+            Task<Void> sleeper = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    Thread.sleep(750);
+                    return null;
+                }
+            };
+            sleeper.setOnSucceeded(e -> messageLabel.setText(""));
+            new Thread(sleeper).start();
         }
 
         private void setAnswers() {
@@ -64,12 +100,11 @@ public class Main extends Application {
                 answers.add(BirdRepository.getInstance().getBirdByID(answerIds.get(a)).getName());
             }
             answerPane.setAnswers(answers);
-            this.setBottom(answerPane);
         }
 
         private void setText(String text){
-            Label l = new Label(text);
-            this.setTop(l);
+            headerLabel.setText(text);
+            this.setTop(headerLabel);
         }
     }
 
@@ -92,14 +127,18 @@ public class Main extends Application {
                 button.setOnAction(e -> {
                     if (currentQuestion < NO_QUESTIONS - 1) {
                         if (isAnswerCorrect(button)) {
+                            rootPane.setMessageLabel(true);
                             playerData.addPoints(5);
                         }
+                        else rootPane.setMessageLabel(false);
                         nextQuestion();
                     }
                     else if (currentQuestion < NO_QUESTIONS) {
                         if (isAnswerCorrect(button)) {
+                            rootPane.setMessageLabel(true);
                             playerData.addPoints(5);
                         }
+                        else rootPane.setMessageLabel(false);
                         currentQuestion++;
                         rootPane.setText("Du hast " + playerData.getPoints() + " Punkte erreicht.");
                     }
@@ -124,7 +163,7 @@ public class Main extends Application {
 
         public void nextQuestion() {
             currentQuestion += 1;
-            rootPane.setAnswers();
+            rootPane.setBottom();
             rootPane.setImage();
             rootPane.setText(playerData.getPoints() + " Punkte.");
         }

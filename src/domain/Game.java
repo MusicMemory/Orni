@@ -65,7 +65,7 @@ public class Game {
 
             List<Integer> birdIdsSameOrder = birdRepository.getBirdIdsByOrder(birdQuestion.getOrder());
             Collections.shuffle(birdIdsSameOrder);
-            System.out.println(q + ". Same Order:" + birdIdsSameOrder);
+            System.out.println(q + ". Same Order (" + birdQuestion.getOrder() + "): " + birdIdsSameOrder);
 
             outerloop:
             for (int i = 0; i < birdIdsSameOrder.size(); i++){
@@ -81,7 +81,6 @@ public class Game {
                     }
                 }
                 answerList.add(birdCandidateId);
-                System.out.println("Suc!");
             }
             int newPos = -1;
             outerloop:
@@ -103,16 +102,16 @@ public class Game {
             }
             //RIGHT ANSWER
             if (newPos != -1) {
-                answerList.set(newPos,questions.get(q));
+                answerList.set(newPos, questions.get(q));
             }
             else {
                 int posRightAnswer = r.nextInt(noAnswers);
-                answerList.set(posRightAnswer,questions.get(q));
+                answerList.set(posRightAnswer, questions.get(q));
             }
             //ADD
             answers.add(answerList);
         }
-        System.out.println(questions);
-        System.out.println(answers);
+        System.out.println("Fragen: " + questions);
+        System.out.println("Antworten: " + answers);
     }
 }
