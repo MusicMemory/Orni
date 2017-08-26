@@ -1,6 +1,6 @@
 .root-pane {
     -fx-background-color: Black;
-    -fx-padding : 15;
+    -fx-padding: 15;
 }
 
 Button {
@@ -16,6 +16,16 @@ Button:hover {
 }
 
 HBox {
+    -fx-border-color: crimson;
+    -fx-border-width: 2px;
+
     -fx-alignment: center;
-    -fx-spacing: 10;
+    -fx-spacing: 25;
+    -fx-padding: 10;
+}
+
+Label {
+    -fx-font: 25px "Comic Sans";
+    -fx-text-fill: white;
+
 }

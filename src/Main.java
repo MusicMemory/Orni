@@ -1,13 +1,11 @@
-import domain.Bird;
-import domain.BirdRepository;
-import domain.Game;
-import domain.ImageRepository;
+import domain.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
@@ -25,9 +23,10 @@ public class Main extends Application {
 
     private static final int NO_QUESTIONS = 10;
     private static final int NO_ANSWERS = 4;
-    private static final int DIFFICULTY = 1;
 
-    private final Game game = new Game(BirdRepository.getInstance().noBirds(), NO_QUESTIONS, NO_ANSWERS, DIFFICULTY);
+    private PlayerData playerData = new PlayerData();
+    private final Game game = new Game(BirdRepository.getInstance().noBirds(), NO_QUESTIONS, NO_ANSWERS, playerData.getDifficulty());
+
     private final RootPane rootPane = new RootPane();
     private final Scene scene = new Scene(rootPane);
 
@@ -47,6 +46,7 @@ public class Main extends Application {
 
             setAnswers();
             setImage();
+            setText(playerData.getPoints() + " Punkte.");
         }
 
         private void setImage() {
@@ -65,6 +65,11 @@ public class Main extends Application {
             }
             answerPane.setAnswers(answers);
             this.setBottom(answerPane);
+        }
+
+        private void setText(String text){
+            Label l = new Label(text);
+            this.setTop(l);
         }
     }
 
@@ -85,15 +90,18 @@ public class Main extends Application {
                 Button button = new Button();
                 //button.setPrefWidth(120);
                 button.setOnAction(e -> {
-                    if (currentQuestion < NO_QUESTIONS-1) {
+                    if (currentQuestion < NO_QUESTIONS - 1) {
                         if (isAnswerCorrect(button)) {
-                            game.addPoints(5);
+                            playerData.addPoints(5);
                         }
-                        System.out.println(game.getPoints());
                         nextQuestion();
                     }
-                    else {
-                        System.out.println("Du hast " + game.getPoints() + " Punkte erreicht.");
+                    else if (currentQuestion < NO_QUESTIONS) {
+                        if (isAnswerCorrect(button)) {
+                            playerData.addPoints(5);
+                        }
+                        currentQuestion++;
+                        rootPane.setText("Du hast " + playerData.getPoints() + " Punkte erreicht.");
                     }
                 });
                 buttons.add(button);
@@ -118,6 +126,7 @@ public class Main extends Application {
             currentQuestion += 1;
             rootPane.setAnswers();
             rootPane.setImage();
+            rootPane.setText(playerData.getPoints() + " Punkte.");
         }
     }
 
@@ -127,10 +136,11 @@ public class Main extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
+        stage.setTitle("Ornithology");
+
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
 
         scene.getStylesheets().add("/css/game.css");
-
         stage.setScene(scene);
         stage.show();
     }

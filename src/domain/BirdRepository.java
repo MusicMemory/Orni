@@ -27,6 +27,15 @@ public class BirdRepository {
         return birds.get(id);
     }
 
+    public List<Integer> getBirdIdsByOrder(String order) {
+        List<Integer> birdIdsWithOrder = new ArrayList<>();
+        for (int i = 0; i < birds.size(); i++) {
+            if (birds.get(i).getOrder().equals(order)) {
+                birdIdsWithOrder.add(i);
+            }
+        }
+        return birdIdsWithOrder;
+    }
 
     private void init(String csvFile) {
         String line;
