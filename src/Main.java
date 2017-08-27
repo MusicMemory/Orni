@@ -22,7 +22,7 @@ import java.util.List;
 
 public class Main extends Application {
 
-    private static final int NO_QUESTIONS = 10;
+    private static final int NO_QUESTIONS = 3;
     private static final int NO_ANSWERS = 4;
 
     private PlayerData playerData = new PlayerData();
@@ -32,6 +32,7 @@ public class Main extends Application {
     private final Scene scene = new Scene(rootPane);
 
     private int currentQuestion = 0;
+    private boolean gameRuns = true;
 
     /*-----------------------------------------------------------------------*\
      * RootPane                                                              *
@@ -72,7 +73,7 @@ public class Main extends Application {
 
         private void setMessageLabel(Boolean correct) {
             if (correct) {
-                messageLabel.setText("+100");
+                messageLabel.setText("+50");
                 messageLabel.setTextFill(Color.GREEN);
             }
             else {
@@ -128,22 +129,25 @@ public class Main extends Application {
                 Button button = new Button();
                 //button.setPrefWidth(120);
                 button.setOnAction(e -> {
-                    if (currentQuestion < NO_QUESTIONS - 1) {
-                        if (isAnswerCorrect(button)) {
-                            rootPane.setMessageLabel(true);
-                            playerData.addPoints(100);
+                    if (gameRuns) {
+                        if (currentQuestion < NO_QUESTIONS) {
+                            if (isAnswerCorrect(button)) {
+                                rootPane.setMessageLabel(true);
+                                playerData.addPoints(50);
+                            }
+                            else {
+                                rootPane.setMessageLabel(false);
+
+                            }
+                            currentQuestion++;
+                            if (currentQuestion != NO_QUESTIONS) {
+                                nextQuestion();
+                            }
                         }
-                        else rootPane.setMessageLabel(false);
-                        nextQuestion();
-                    }
-                    else if (currentQuestion < NO_QUESTIONS) {
-                        if (isAnswerCorrect(button)) {
-                            rootPane.setMessageLabel(true);
-                            playerData.addPoints(100);
+                        else {
+                            rootPane.setText("Du hast " + playerData.getPoints() + " Punkte erreicht.");
+                            gameRuns = false;
                         }
-                        else rootPane.setMessageLabel(false);
-                        currentQuestion++;
-                        rootPane.setText("Du hast " + playerData.getPoints() + " Punkte erreicht.");
                     }
                 });
                 buttons.add(button);
@@ -165,9 +169,6 @@ public class Main extends Application {
         }
 
         public void nextQuestion() {
-            currentQuestion += 1;
-            /*rootPane.setBottom();
-            rootPane.setImage();*/
             rootPane.setText("" + playerData.getPoints());
         }
     }

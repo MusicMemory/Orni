@@ -18,17 +18,18 @@ Button:hover {
 }
 
 HBox {
-    -fx-border-color: crimson;
-    -fx-border-width: 2px;
+    /*-fx-border-color: crimson;
+    -fx-border-width: 2px;*/
     -fx-alignment: center;
     -fx-spacing: 5;
 }
 
 .header-label {
-    -fx-font: 25px "Comic Sans Ms";
+    -fx-font: 30px "Comic Sans Ms";
     -fx-text-fill: white;
+    //-fx-alignment: right;
 }
 
 .message-label {
-    -fx-font: 25px "Comic Sans Ms";
+    -fx-font: 60px "Comic Sans Ms";
 }
